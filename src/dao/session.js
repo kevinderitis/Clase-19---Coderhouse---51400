@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { userModel } from "./models/user.js";
 
-mongoose.connect('mongodb+srv://coderhouse:coder123456@coderhouse.z88zdi9.mongodb.net/session?retryWrites=true&w=majority');
+mongoose.connect('');
 
 export const getAll = async () => {
     let result;
