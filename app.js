@@ -16,7 +16,7 @@ app.set('views', './views')
 
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://coderhouse:coder123456@coderhouse.z88zdi9.mongodb.net/session?retryWrites=true&w=majority',
+        mongoUrl: 'mongodb+srv://coderhouse:coder123456@coderhouse.z88zdi9.mongodb.net/test?retryWrites=true&w=majority',
         mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
         ttl: 3600
     }), 

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { userModel } from "./models/user.js";
 
-mongoose.connect('');
+mongoose.connect('mongodb+srv://coderhouse:coder123456@coderhouse.z88zdi9.mongodb.net/test?retryWrites=true&w=majority');
 
 export const getAll = async () => {
     let result;
@@ -36,4 +36,12 @@ export const createUser = async user => {
     return result;
 }
 
-
+export const updateUserPassword = async (email, newPassword) => {
+    let result;
+    try {
+        result = await userModel.updateOne({email: email}, { $set: { password: newPassword }} )
+    } catch (error) {
+        console.log(error)
+    }
+    return result;
+}

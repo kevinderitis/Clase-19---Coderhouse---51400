@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { createUser, getAll, getByEmail } from '../dao/session.js';
+import { createUser, getAll, getByEmail, updateUserPassword } from '../dao/session.js';
 import { authMiddleware } from '../middlewares/auth.js';
+import { createHash, isValidPassword } from '../utils/index.js';
 const sessionRouter = Router();
 
 sessionRouter.get('/register', (req, res) => {
@@ -13,6 +14,7 @@ sessionRouter.post('/register', async (req, res) => {
     if(userFound){
         res.render('register-error', {})
     }
+    user.password = createHash(user.password);
     let result = await createUser(user)
     console.log(result)
     res.render('login', {})
@@ -25,7 +27,7 @@ sessionRouter.get('/login', (req, res) => {
 sessionRouter.post('/login', async (req, res) => {
     let user = req.body;
     let result = await getByEmail(user.email)
-    if(user.password !== result.password){
+    if(!user || !isValidPassword(result, user.password)){
         res.render('login-error',{})
     }
     req.session.user = user.email;
@@ -41,6 +43,23 @@ sessionRouter.get('/logout', (req, res) => {
     req.session.destroy(error => {
         res.render('login')
     })
+})
+
+sessionRouter.get('/restore', (req, res) => {
+    res.render('restore-password', {})
+})
+
+sessionRouter.post('/restore', async (req, res) => {
+    let user = req.body;
+    let userFound = await getByEmail(user.email);
+    if(!userFound){
+        res.render('register', {})
+    }else{
+        let newPassword = createHash(user.password);
+        let result = await updateUserPassword(user.email, newPassword);
+    }
+
+    res.render('login', { user })
 })
 
 export default sessionRouter;
